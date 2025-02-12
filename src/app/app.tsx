@@ -1,7 +1,12 @@
-fetch('http://localhost:3001/users').then((res) => {
-  console.log(res);
-});
+import { Route, Routes } from 'react-router-dom';
+import { UsersPage } from '../pages/users';
+import { TodoListPage } from '../pages/todo-list';
 
 export function App() {
-  return <div>Hello</div>;
+  return (
+    <Routes>
+      <Route path="/users" element={<UsersPage />} />
+      <Route path="/todo" element={<TodoListPage />} />
+    </Routes>
+  );
 }
