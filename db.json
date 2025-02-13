@@ -1,33 +1,4 @@
 {
   "tasks": [],
-  "users": [
-    {
-      "id": "b7c5e500-9a56-4009-b08e-e352bfb088e3",
-      "email": "edsa@fdsa"
-    },
-    {
-      "id": "836d6e01-4ae8-4280-9ddd-ffc4c3ba3be2",
-      "email": "edsa@fdsads"
-    },
-    {
-      "id": "b0245745-6d18-4959-8743-3dfdb50a5a1b",
-      "email": "TEST@fdsjak"
-    },
-    {
-      "id": "80ee7613-9eb3-4e8b-9eba-b6bcfcf727d8",
-      "email": "TEST@fdsjak"
-    },
-    {
-      "id": "48ac6861-bcad-4420-85f1-38162cc89158",
-      "email": "TEST@fdsjak"
-    },
-    {
-      "id": "63756d88-219c-4e70-8c2f-01b91f19e40c",
-      "email": "TEST@fdsjak"
-    },
-    {
-      "id": "7151f4a5-272c-4337-9d68-844b5138393f",
-      "email": "Resr@hdjsk"
-    }
-  ]
+  "users": []
 }

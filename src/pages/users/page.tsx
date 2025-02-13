@@ -92,7 +92,7 @@ export function UserCard({
 
   const handleDelete = async () => {
     startTransition(async () => {
-      deleteUser(user.id);
+      await deleteUser(user.id);
       refetchUsers();
     });
   };
@@ -102,7 +102,7 @@ export function UserCard({
       {user.email}
 
       <button
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-auto"
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-auto disabled:bg-gray-400"
         type="button"
         disabled={isPending}
         onClick={handleDelete}
