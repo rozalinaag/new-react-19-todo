@@ -1,41 +1,46 @@
 import { Suspense, use, useState } from 'react';
-import { fetchUsers } from '../../shared/api';
+import { createUser, fetchUsers } from '../../shared/api';
 import { User } from '../../shared/types';
 
 const defaultUsersPromise = fetchUsers();
 
 export function UsersPage() {
   const [usersPromise, setUsersPromise] = useState(defaultUsersPromise);
-
-  // const [users, setUsers] = useState<User[]>([]);
-  // const [email, setEmail] = useState('');
-
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   setUsers([...users, { id: crypto.randomUUID(), email }]);
-  //   setEmail('');
-  // };
-
-  // const handleDelete = (id: string) => {
-  //   setUsers((lastUsers) => lastUsers.filter((user) => user.id !== id));
-  // };
+  const refetchUsers = () => {
+    setUsersPromise(fetchUsers());
+  };
 
   return (
     <main className="container mx-auto p-10 flex flex-col gap-4">
       <h1 className="text-3xl font-bold underline mb-10">Users</h1>
 
-      <CreateUserForm />
+      <CreateUserForm refetchUsers={refetchUsers} />
 
-      <Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
         <UsersList usersPromise={usersPromise} />
       </Suspense>
     </main>
   );
 }
 
-export function CreateUserForm() {
+export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = async () => {
+    await createUser({
+      email,
+      id: crypto.randomUUID(),
+    });
+    refetchUsers();
+    setEmail('');
+  };
+
+  const handleDelete = (id: string) => {
+    setUsers((lastUsers) => lastUsers.filter((user) => user.id !== id));
+  };
+
   return (
-    <form className="flex gap-2">
+    <form className="flex gap-2" onSubmit={handleSubmit}>
       <input
         type="email"
         className="border p-2 rounded"
