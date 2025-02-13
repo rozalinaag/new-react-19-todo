@@ -6,6 +6,7 @@ const defaultUsersPromise = fetchUsers();
 
 export function UsersPage() {
   const [usersPromise, setUsersPromise] = useState(defaultUsersPromise);
+
   const refetchUsers = () => {
     setUsersPromise(fetchUsers());
   };
@@ -26,7 +27,9 @@ export function UsersPage() {
 export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
   const [email, setEmail] = useState('');
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     await createUser({
       email,
       id: crypto.randomUUID(),
