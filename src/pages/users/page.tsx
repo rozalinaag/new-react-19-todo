@@ -1,4 +1,4 @@
-import { Suspense, use, useState } from 'react';
+import { Suspense, use, useState, useTransition } from 'react';
 import { createUser, fetchUsers } from '../../shared/api';
 import { User } from '../../shared/types';
 
@@ -27,15 +27,22 @@ export function UsersPage() {
 export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
   const [email, setEmail] = useState('');
 
+  const [isPending, startTransition] = useTransition();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await createUser({
-      email,
-      id: crypto.randomUUID(),
+    startTransition(async () => {
+      await createUser({
+        email,
+        id: crypto.randomUUID(),
+      });
+
+      startTransition(() => {
+        refetchUsers();
+        setEmail(email);
+      });
     });
-    refetchUsers();
-    setEmail(email);
   };
 
   const handleDelete = (id: string) => {
@@ -52,7 +59,8 @@ export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
       />
 
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
+        disabled={isPending}
         type="submit"
       >
         Add
