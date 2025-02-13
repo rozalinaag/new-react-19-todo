@@ -11,12 +11,12 @@ export function UsersPage() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setUsers([...users, { id: Date.now().toString(), email }]);
+    setUsers([...users, { id: crypto.randomUUID(), email }]);
     setEmail('');
   };
 
   return (
-    <main className="p-10">
+    <main className="container mx-auto p-10">
       <h1 className="text-3xl font-bold underline mb-10">Users</h1>
 
       <section>
