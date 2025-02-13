@@ -1,9 +1,12 @@
-type User = {
-  id: string;
-  email: string;
-};
+import { Suspense, use, useState } from 'react';
+import { fetchUsers } from '../../shared/api';
+import { User } from '../../shared/types';
+
+const defaultUsersPromise = fetchUsers();
 
 export function UsersPage() {
+  const [usersPromise, setUsersPromise] = useState(defaultUsersPromise);
+
   // const [users, setUsers] = useState<User[]>([]);
   // const [email, setEmail] = useState('');
 
@@ -23,12 +26,9 @@ export function UsersPage() {
 
       <CreateUserForm />
 
-      <UsersList
-        users={[
-          { id: '1', email: 'Xy@example.com' },
-          { id: '2', email: 'x9Gy@dsd' },
-        ]}
-      />
+      <Suspense>
+        <UsersList usersPromise={usersPromise} />
+      </Suspense>
     </main>
   );
 }
@@ -53,7 +53,9 @@ export function CreateUserForm() {
   );
 }
 
-export function UsersList({ users }: { users: User[] }) {
+export function UsersList({ usersPromise }: { usersPromise: Promise<User[]> }) {
+  const users = use(usersPromise);
+
   return (
     <div className="flex flex-col">
       {users.map((user) => (
