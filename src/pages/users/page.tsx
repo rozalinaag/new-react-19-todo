@@ -35,7 +35,7 @@ export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
       id: crypto.randomUUID(),
     });
     refetchUsers();
-    setEmail('');
+    setEmail(email);
   };
 
   const handleDelete = (id: string) => {
@@ -47,8 +47,8 @@ export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
       <input
         type="email"
         className="border p-2 rounded"
-        // value={email}
-        // onChange={(event) => setEmail(event.target.value)}
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
       />
 
       <button
