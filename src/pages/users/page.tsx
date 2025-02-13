@@ -1,4 +1,4 @@
-import { Suspense, use, useState, useTransition } from 'react';
+import { startTransition, Suspense, use, useState, useTransition } from 'react';
 import { createUser, deleteUser, fetchUsers } from '../../shared/api';
 import { User } from '../../shared/types';
 
@@ -7,9 +7,8 @@ const defaultUsersPromise = fetchUsers();
 export function UsersPage() {
   const [usersPromise, setUsersPromise] = useState(defaultUsersPromise);
 
-  const refetchUsers = () => {
-    setUsersPromise(fetchUsers());
-  };
+  const refetchUsers = () =>
+    startTransition(() => setUsersPromise(fetchUsers()));
 
   return (
     <main className="container mx-auto p-10 flex flex-col gap-4">
@@ -38,10 +37,8 @@ export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
         id: crypto.randomUUID(),
       });
 
-      startTransition(() => {
-        refetchUsers();
-        setEmail(email);
-      });
+      refetchUsers();
+      setEmail(email);
     });
   };
 
@@ -96,8 +93,7 @@ export function UserCard({
   const handleDelete = async () => {
     startTransition(async () => {
       deleteUser(user.id);
-
-      startTransition(() => refetchUsers());
+      refetchUsers();
     });
   };
 
