@@ -1,5 +1,5 @@
 import { Suspense, use, useState, useTransition } from 'react';
-import { createUser, fetchUsers } from '../../shared/api';
+import { createUser, deleteUser, fetchUsers } from '../../shared/api';
 import { User } from '../../shared/types';
 
 const defaultUsersPromise = fetchUsers();
@@ -18,7 +18,7 @@ export function UsersPage() {
       <CreateUserForm refetchUsers={refetchUsers} />
 
       <Suspense fallback={<div>Loading...</div>}>
-        <UsersList usersPromise={usersPromise} />
+        <UsersList usersPromise={usersPromise} refetchUsers={refetchUsers} />
       </Suspense>
     </main>
   );
@@ -45,16 +45,13 @@ export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
     });
   };
 
-  const handleDelete = (id: string) => {
-    setUsers((lastUsers) => lastUsers.filter((user) => user.id !== id));
-  };
-
   return (
     <form className="flex gap-2" onSubmit={handleSubmit}>
       <input
         type="email"
         className="border p-2 rounded"
         value={email}
+        disabled={isPending}
         onChange={(event) => setEmail(event.target.value)}
       />
 
@@ -69,19 +66,41 @@ export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
   );
 }
 
-export function UsersList({ usersPromise }: { usersPromise: Promise<User[]> }) {
+export function UsersList({
+  usersPromise,
+  refetchUsers,
+}: {
+  usersPromise: Promise<User[]>;
+  refetchUsers: () => void;
+}) {
   const users = use(usersPromise);
 
   return (
     <div className="flex flex-col">
       {users.map((user) => (
-        <UserCard key={user.id} user={user} />
+        <UserCard key={user.id} user={user} refetchUsers={refetchUsers} />
       ))}
     </div>
   );
 }
 
-export function UserCard({ user }: { user: User }) {
+export function UserCard({
+  user,
+  refetchUsers,
+}: {
+  user: User;
+  refetchUsers: () => void;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  const handleDelete = async () => {
+    startTransition(async () => {
+      deleteUser(user.id);
+
+      startTransition(() => refetchUsers());
+    });
+  };
+
   return (
     <div className="border p-2 m-2 rounded bg-gray-100 flex gap-2 ">
       {user.email}
@@ -89,7 +108,8 @@ export function UserCard({ user }: { user: User }) {
       <button
         className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-auto"
         type="button"
-        // onClick={() => handleDelete(user.id)}
+        disabled={isPending}
+        onClick={handleDelete}
       >
         Delete
       </button>
