@@ -41,29 +41,14 @@ export function UsersPage() {
 }
 
 export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
-  const [email, setEmail] = useState('');
   const [state, dispatch, isPending] = useActionState(
-    createUserAction({ refetchUsers, setEmail }),
+    createUserAction({ refetchUsers }),
     {}
   );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    startTransition(async () => {
-      dispatch({ email });
-    });
-  };
-
   return (
-    <form className="flex gap-2" onSubmit={handleSubmit}>
-      <input
-        type="email"
-        className="border p-2 rounded"
-        value={email}
-        disabled={isPending}
-        onChange={(event) => setEmail(event.target.value)}
-      />
+    <form className="flex gap-2" action={dispatch}>
+      <input type="email" className="border p-2 rounded" disabled={isPending} />
 
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"

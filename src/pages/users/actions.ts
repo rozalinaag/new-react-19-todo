@@ -5,24 +5,23 @@ type CreateActionState = {
 };
 
 export const createUserAction =
-  ({
-    refetchUsers,
-    setEmail,
-  }: {
-    refetchUsers: () => void;
-    setEmail: (email: string) => void;
-  }) =>
-  async (
-    formData: { email: string }
-  ): Promise<CreateActionState> => {
+  ({ refetchUsers }: { refetchUsers: () => void }) =>
+  async (prevState: CreateActionState, formData: FormData): Promise<CreateActionState> => {
+    const email = formData.get('email') as string;
+
+    if (email === 'admin@gmail.com') {
+      return {
+        error: 'Admin account is not allowed',
+      };
+    }
+
     try {
       await createUser({
-        email: formData.email,
+        email,
         id: crypto.randomUUID(),
       });
 
       refetchUsers();
-      setEmail('');
 
       return {};
     } catch {
