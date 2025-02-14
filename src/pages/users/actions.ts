@@ -7,7 +7,7 @@ type CreateActionState = {
 
 export const createUserAction =
   ({ refetchUsers }: { refetchUsers: () => void }) =>
-  async (prevState: CreateActionState, formData: FormData): Promise<CreateActionState> => {
+  async (_: CreateActionState, formData: FormData): Promise<CreateActionState> => {
     const email = formData.get('email') as string;
 
     if (email === 'admin@gmail.com') {
