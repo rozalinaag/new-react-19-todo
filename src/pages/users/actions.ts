@@ -2,6 +2,7 @@ import { createUser } from '../../shared/api';
 
 type CreateActionState = {
   error?: string;
+  email: string;
 };
 
 export const createUserAction =
@@ -12,6 +13,7 @@ export const createUserAction =
     if (email === 'admin@gmail.com') {
       return {
         error: 'Admin account is not allowed',
+        email
       };
     }
 
@@ -23,9 +25,12 @@ export const createUserAction =
 
       refetchUsers();
 
-      return {};
+      return {
+        email: ""
+      };
     } catch {
       return {
+        email,
         error: 'error while creating user',
       };
     }

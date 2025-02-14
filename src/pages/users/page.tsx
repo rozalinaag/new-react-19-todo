@@ -43,7 +43,7 @@ export function UsersPage() {
 export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
   const [state, dispatch, isPending] = useActionState(
     createUserAction({ refetchUsers }),
-    {}
+    { email: '' }
   );
 
   return (
@@ -52,6 +52,7 @@ export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
         name="email"
         type="email"
         className="border p-2 rounded"
+        defaultValue={state.email}
         disabled={isPending}
       />
 
