@@ -48,7 +48,12 @@ export function CreateUserForm({ refetchUsers }: { refetchUsers: () => void }) {
 
   return (
     <form className="flex gap-2" action={dispatch}>
-      <input type="email" className="border p-2 rounded" disabled={isPending} />
+      <input
+        name="email"
+        type="email"
+        className="border p-2 rounded"
+        disabled={isPending}
+      />
 
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
