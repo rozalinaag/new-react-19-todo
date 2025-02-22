@@ -4,12 +4,11 @@ import {
   use,
   useActionState,
   useState,
-  useTransition,
 } from 'react';
-import { deleteUser, fetchUsers } from '../../shared/api';
+import { fetchUsers } from '../../shared/api';
 import { User } from '../../shared/types';
 import { ErrorBoundary } from 'react-error-boundary';
-import { createUserAction } from './actions';
+import { createUserAction, deleteUserAction } from './actions';
 
 const defaultUsersPromise = fetchUsers();
 
@@ -94,27 +93,25 @@ export function UserCard({
   user: User;
   refetchUsers: () => void;
 }) {
-  const [isPending, startTransition] = useTransition();
-
-  const handleDelete = async () => {
-    startTransition(async () => {
-      await deleteUser(user.id);
-      refetchUsers();
-    });
-  };
+  const [state, handleDelete, isPending] = useActionState(
+    deleteUserAction({ id: user.id, refetchUsers }),
+    {}
+  );
 
   return (
     <div className="border p-2 m-2 rounded bg-gray-100 flex gap-2 ">
       {user.email}
 
-      <button
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-auto disabled:bg-gray-400"
-        type="button"
-        disabled={isPending}
-        onClick={handleDelete}
-      >
-        Delete
-      </button>
+      <form className="ml-auto">
+        <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-auto disabled:bg-gray-400"
+          disabled={isPending}
+          formAction={handleDelete}
+        >
+          Delete{' '}
+          {state.error && <div className="text-red-500">{state.error}</div>}
+        </button>
+      </form>
     </div>
   );
 }
