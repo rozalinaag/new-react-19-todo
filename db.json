@@ -1,4 +1,13 @@
 {
   "tasks": [],
-  "users": []
+  "users": [
+    {
+      "id": "a019a553-7151-4b8e-a53d-1afc913ab89e",
+      "email": "rozalina@gmail.com"
+    },
+    {
+      "id": "a14b3ad9-4766-423b-9aa6-c94ad0a54d63",
+      "email": "rosalina0@mail.ru"
+    }
+  ]
 }
