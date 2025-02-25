@@ -1,4 +1,4 @@
-import { Suspense, useActionState } from 'react';
+import { Suspense, useActionState, useOptimistic, useRef } from 'react';
 import { User } from '../../shared/types';
 import { ErrorBoundary } from 'react-error-boundary';
 import { CreateUserAction, DeleteUserAction } from './actions';
@@ -40,13 +40,25 @@ export function CreateUserForm({
     email: '',
   });
 
+  const [optimisticState, setOptimisticState] = useOptimistic(state);
+
+  const form = useRef<HTMLFormElement>(null);
+
   return (
-    <form className="flex gap-2" action={dispatch}>
+    <form
+      className="flex gap-2"
+      ref={form}
+      action={(formData: FormData) => {
+        setOptimisticState({ email: '' });
+        dispatch(formData);
+        form.current?.reset();
+      }}
+    >
       <input
         name="email"
         type="email"
         className="border p-2 rounded"
-        defaultValue={state.email}
+        defaultValue={optimisticState.email}
       />
 
       <button
@@ -56,7 +68,9 @@ export function CreateUserForm({
         Add
       </button>
 
-      {state.error && <div className="text-red-500">{state.error}</div>}
+      {optimisticState.error && (
+        <div className="text-red-500">{optimisticState.error}</div>
+      )}
     </form>
   );
 }
