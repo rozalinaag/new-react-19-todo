@@ -19,3 +19,23 @@ export function deleteUser(id: string){
     method: "DELETE"
   }).then((res) => res.json())
 }
+
+export type Task = {
+  id: string;
+  userId: string;
+  title: string;
+  done: string;
+  createdAt: string;
+}
+
+export function fetchTasks({
+  page, per_page, query,
+}: {
+  page?: number;
+  per_page: number;
+  query: string;
+}){
+  return fetch (
+    `htttp://localhost:3001/tasks?_page=${page}&_per_page=${per_page}${query}`
+  ).then((res) => res.json() as Promise<Task[]>)
+}
