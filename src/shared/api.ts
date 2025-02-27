@@ -29,13 +29,19 @@ export type Task = {
 }
 
 export function fetchTasks({
-  page, per_page, query,
+  page = 1, per_page = 10, sort ={ createdAt: "asc"}, filters
 }: {
   page?: number;
-  per_page: number;
+  per_page?: number;
   query: string;
+  filters?: {
+    userId?: string;
+  }
+  sort?: {
+    createdAt: "asc" | "desc"
+  }
 }){
   return fetch (
-    `htttp://localhost:3001/tasks?_page=${page}&_per_page=${per_page}${query}`
+    `htttp://localhost:3001/tasks?_page=${page}&_per_page=${per_page}&_sort=${sort.createdAt === 'asc' ? '': '-'}createdAt&userId=${filters?.userId}`
   ).then((res) => res.json() as Promise<Task[]>)
 }
